@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 class ApplicationTest {
     @Test
-    void applicationStarted() {
+    void applicationMain() {
         Application.main(new String[] {});
     }
 }
