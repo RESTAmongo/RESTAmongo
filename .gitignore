@@ -144,5 +144,8 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,java,gradle
 
-# Ignore SonarQube scan script
+# Local gradle properties
+gradle-local.properties
+
+# SonarQube scan script
 sonarscan
