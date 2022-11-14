@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PropertyTest {
     @Test
-    void fieldsConstructor() {
+    void constructorFields() {
         Property property = new Property("color", 0, Collections.emptyList());
         assertAll(() -> assertEquals("color", property.name),
                   () -> assertEquals(0, property.order),

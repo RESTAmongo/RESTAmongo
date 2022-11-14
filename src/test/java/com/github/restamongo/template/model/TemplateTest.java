@@ -9,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TemplateTest {
     @Test
-    void emptyConstructor() {
+    void constructorEmpty() {
         Template template = new Template();
         assertNotNull(template);
     }
 
     @Test
-    void requestModelConstructor() {
+    void constructorRequestModel() {
         Template template = new Template(
                 new TemplateModel("archetype", Collections.singletonList(
                         new Property("color", 0, Collections.emptyList()))));
@@ -26,7 +26,7 @@ class TemplateTest {
     }
 
     @Test
-    void fieldsConstructor() {
+    void constructorFields() {
         Template template = new Template("archetype", Collections.singletonList(
                 new Property("color", 0, Collections.emptyList())));
         assertAll(() -> assertEquals("archetype", template.id),

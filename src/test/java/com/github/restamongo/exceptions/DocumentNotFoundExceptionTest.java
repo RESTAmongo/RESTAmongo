@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 class DocumentNotFoundExceptionTest {
     @Test
-    void emptyConstructor() {
+    void constructorEmpty() {
         Exception exception = assertThrowsExactly(DocumentNotFoundException.class, () -> {
             throw new DocumentNotFoundException();
         });
@@ -15,7 +15,7 @@ class DocumentNotFoundExceptionTest {
     }
 
     @Test
-    void stringIdConstructor() {
+    void constructorStringId() {
         Exception exception = assertThrowsExactly(DocumentNotFoundException.class, () -> {
             throw new DocumentNotFoundException("error");
         });
