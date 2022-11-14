@@ -6,3 +6,6 @@ spring:
     mongodb:
       host: localhost
       port: 42666
+      database:
+      username:
+      password:
