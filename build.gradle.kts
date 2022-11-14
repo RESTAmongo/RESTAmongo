@@ -1,6 +1,7 @@
 plugins {
     // Application frameworks and dependencies
     id("application")
+    id("java")
     id("org.springframework.boot") version "2.7.5"
     // Ease of management
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
@@ -21,12 +22,18 @@ repositories {
 dependencies {
     // Application implementation
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     // Application testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
+tasks.javadoc {
+    setSource("src/main/java")
+}
+
 tasks.test {
+    dependsOn(tasks.javadoc)
     useJUnitPlatform()
     // Connect JUnit tests to JaCoCo
     finalizedBy(tasks.jacocoTestReport)
@@ -45,7 +52,7 @@ tasks.sonar {
 }
 
 sonar {
-    properties{
+    properties {
         property("sonar.host.url", project.property("sonar.host.url").toString())
         property("sonar.projectKey", project.property("sonar.projectKey").toString())
         property("sonar.login", project.property("sonar.login").toString())
