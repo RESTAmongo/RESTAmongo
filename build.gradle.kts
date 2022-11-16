@@ -24,6 +24,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+    implementation("com.google.guava:guava:31.1-jre")
     // Application testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

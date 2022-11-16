@@ -1,11 +1,11 @@
 package com.github.restamongo.template.model;
 
-import com.github.restamongo.template.TemplateModel;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -47,6 +47,6 @@ public class Template {
      */
     public Template(String id, List<Property> properties) {
         this.id = id;
-        this.properties = properties;
+        this.properties = properties.stream().sorted(Comparator.comparing(p -> p.order)).toList();
     }
 }

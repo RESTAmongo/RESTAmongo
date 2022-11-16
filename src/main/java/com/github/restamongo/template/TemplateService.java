@@ -1,6 +1,9 @@
 package com.github.restamongo.template;
 
+import com.github.restamongo.exceptions.DocumentAlreadyExistsException;
 import com.github.restamongo.exceptions.DocumentNotFoundException;
+import com.github.restamongo.exceptions.InvalidDocumentContentException;
+import com.github.restamongo.template.model.Property;
 import com.github.restamongo.template.model.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +26,7 @@ public class TemplateService {
      *
      * @return list of templates
      */
-    public List<Template> find() {
+    public List<Template> findAll() {
         return repository.findAll();
     }
 
@@ -34,34 +37,35 @@ public class TemplateService {
      *
      * @return specified template
      */
-    public Template find(String id) {
+    public Template findOne(String id) {
         return repository.findById(id).orElseThrow(() -> new DocumentNotFoundException(id));
     }
 
     /**
      * Create new template.
      *
-     * @param templateModel model from request body
+     * @param template model from request body
      *
      * @return newly created template
      */
-    public Template create(TemplateModel templateModel) {
-        return repository.save(new Template(templateModel));
+    public Template create(Template template) {
+        this.validateTemplate(template);
+        if (repository.existsById(template.id))
+            throw new DocumentAlreadyExistsException(template.id);
+        else
+            return repository.save(template);
     }
 
     /**
      * Update an existing template or create a new one.
      *
-     * @param id            unique string id
-     * @param templateModel model from request body
+     * @param template model from request body
      *
      * @return updated or created template
      */
-    public Template update(String id, TemplateModel templateModel) {
-        return repository.findById(id).map(t -> {
-            t.properties = templateModel.properties();
-            return repository.save(t);
-        }).orElseGet(() -> repository.save(new Template(id, templateModel.properties())));
+    public Template update(Template template) {
+        this.validateTemplate(template);
+        return repository.save(template);
     }
 
     /**
@@ -74,5 +78,37 @@ public class TemplateService {
             repository.deleteById(id);
         else
             throw new DocumentNotFoundException(id);
+    }
+
+    /**
+     * Validation check on template:
+     * - template id must be non-empty;
+     * - there must be at least one property;
+     * - properties names must be non-empty;
+     * - if there are embedded properties, template properties must correspond to existing templates.
+     *
+     * @param template template to check
+     */
+    private void validateTemplate(Template template) {
+        if (template.id.isBlank())
+            throw new InvalidDocumentContentException("template must have a non-empty id");
+        if (template.properties.isEmpty())
+            throw new InvalidDocumentContentException("template does not have any property");
+        for (Property property : template.properties) {
+            if (property.name.isBlank())
+                throw new InvalidDocumentContentException("property must have a non-empty name");
+            if (!property.embeddedProperties.isEmpty())
+                repository.findById(property.name).ifPresentOrElse(t -> {
+                    List<String> tPropertiesNames = t.properties.stream().map(p -> p.name).toList();
+                    property.embeddedProperties.forEach(ep -> {
+                        if (!tPropertiesNames.contains(ep))
+                            throw new InvalidDocumentContentException(
+                                    String.format("\"%s\" property template does not have property \"%s\"", t.id, ep));
+                    });
+                }, () -> {
+                    throw new InvalidDocumentContentException(
+                            String.format("\"%s\" property template does not exist", property.name));
+                });
+        }
     }
 }

@@ -1,14 +1,16 @@
 package com.github.restamongo.template;
 
+import com.github.restamongo.ResponseConstants;
+import com.github.restamongo.exceptions.DocumentAlreadyExistsException;
 import com.github.restamongo.exceptions.DocumentNotFoundException;
+import com.github.restamongo.exceptions.InvalidDocumentContentException;
+import com.google.common.collect.ImmutableSortedMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -17,9 +19,9 @@ import java.util.Map;
 @ControllerAdvice
 public class TemplateControllerAdvisor {
     /**
-     * Handler providing further information for the not found status.
+     * Handler providing further information for the not found status for non-existent templates.
      *
-     * @param exception inner exception
+     * @param exception exception triggering the handler
      *
      * @return info to be added to response body
      */
@@ -27,10 +29,37 @@ public class TemplateControllerAdvisor {
     @ExceptionHandler(DocumentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, Object> templateNotFoundHandler(DocumentNotFoundException exception) {
-        Map<String, Object> info = new LinkedHashMap<>();
-        info.put("message", "Specified template not found");
-        info.put("innerMessage", exception.getMessage());
-        info.put("timestamp", LocalDateTime.now());
-        return info;
+        return ImmutableSortedMap.of(ResponseConstants.MESSAGE_KEY, "Specified template does not exist.",
+                                     ResponseConstants.INNER_MESSAGE_KEY, exception.getMessage());
+    }
+
+    /**
+     * Handler providing further information for the forbidden status for already existing templates.
+     *
+     * @param exception exception triggering the handler
+     *
+     * @return info to be added to response body
+     */
+    @ResponseBody
+    @ExceptionHandler(DocumentAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Map<String, Object> templateAlreadyExistsHandler(DocumentAlreadyExistsException exception) {
+        return ImmutableSortedMap.of(ResponseConstants.MESSAGE_KEY, "Specified template already exists.",
+                                     ResponseConstants.INNER_MESSAGE_KEY, exception.getMessage());
+    }
+
+    /**
+     * Handler providing further information for the unprocessable entity status for invalid templates contents.
+     *
+     * @param exception exception triggering the handler
+     *
+     * @return info to be added to response body
+     */
+    @ResponseBody
+    @ExceptionHandler(InvalidDocumentContentException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public Map<String, Object> invalidTemplateContentHandler(InvalidDocumentContentException exception) {
+        return ImmutableSortedMap.of(ResponseConstants.MESSAGE_KEY, "Specified template content is invalid.",
+                                     ResponseConstants.INNER_MESSAGE_KEY, exception.getMessage());
     }
 }

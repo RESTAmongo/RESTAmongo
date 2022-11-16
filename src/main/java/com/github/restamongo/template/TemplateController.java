@@ -1,7 +1,9 @@
 package com.github.restamongo.template;
 
 import com.github.restamongo.template.model.Template;
+import com.github.restamongo.template.model.TemplateModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  * Template API controller.
  */
 @RestController
-@RequestMapping("templates")
+@RequestMapping("api/templates")
 public class TemplateController {
     /**
      * Template service instance.
@@ -24,8 +26,9 @@ public class TemplateController {
      * @return list of templates
      */
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<Template> getAll() {
-        return service.find();
+        return service.findAll();
     }
 
     /**
@@ -36,8 +39,9 @@ public class TemplateController {
      * @return specified template
      */
     @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     public Template getOne(@PathVariable String id) {
-        return service.find(id);
+        return service.findOne(id);
     }
 
     /**
@@ -48,21 +52,22 @@ public class TemplateController {
      * @return newly created template
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Template post(@RequestBody TemplateModel templateModel) {
-        return service.create(templateModel);
+        return service.create(new Template(templateModel));
     }
 
     /**
      * Put a new or existing template.
      *
-     * @param id            unique string id
      * @param templateModel model from request body
      *
      * @return updated or created template
      */
-    @PutMapping("{id}")
-    public Template put(@PathVariable String id, @RequestBody TemplateModel templateModel) {
-        return service.update(id, templateModel);
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Template put(@RequestBody TemplateModel templateModel) {
+        return service.update(new Template(templateModel));
     }
 
     /**
@@ -71,6 +76,7 @@ public class TemplateController {
      * @param id unique string id
      */
     @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id) {
         service.delete(id);
     }

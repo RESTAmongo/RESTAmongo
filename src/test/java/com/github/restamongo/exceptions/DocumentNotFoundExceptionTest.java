@@ -19,6 +19,6 @@ class DocumentNotFoundExceptionTest {
         Exception exception = assertThrowsExactly(DocumentNotFoundException.class, () -> {
             throw new DocumentNotFoundException("error");
         });
-        assertEquals("Document with id 'error' does not exist.", exception.getMessage());
+        assertEquals("Document with id \"error\" does not exist.", exception.getMessage());
     }
 }

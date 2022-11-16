@@ -17,6 +17,6 @@ public class DocumentNotFoundException extends RuntimeException {
      * @param id document id
      */
     public DocumentNotFoundException(String id) {
-        super(String.format("Document with id '%s' does not exist.", id));
+        super(String.format("Document with id \"%s\" does not exist.", id));
     }
 }

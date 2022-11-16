@@ -1,6 +1,4 @@
-package com.github.restamongo.template;
-
-import com.github.restamongo.template.model.Property;
+package com.github.restamongo.template.model;
 
 import java.util.ArrayList;
 import java.util.List;
