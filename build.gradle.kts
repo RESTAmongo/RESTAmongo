@@ -59,3 +59,10 @@ sonar {
         property("sonar.login", project.property("sonar.login").toString())
     }
 }
+
+tasks.bootJar {
+    manifest {
+        attributes["Implementation-Title"] = project.name
+        attributes["Implementation-Version"] = project.version
+    }
+}

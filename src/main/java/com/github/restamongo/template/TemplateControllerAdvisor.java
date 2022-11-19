@@ -34,7 +34,7 @@ public class TemplateControllerAdvisor {
     }
 
     /**
-     * Handler providing further information for the forbidden status for already existing templates.
+     * Handler providing further information for the conflict status for already existing templates.
      *
      * @param exception exception triggering the handler
      *
@@ -42,7 +42,7 @@ public class TemplateControllerAdvisor {
      */
     @ResponseBody
     @ExceptionHandler(DocumentAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, Object> templateAlreadyExistsHandler(DocumentAlreadyExistsException exception) {
         return ImmutableSortedMap.of(ResponseConstants.MESSAGE_KEY, "Specified template already exists.",
                                      ResponseConstants.INNER_MESSAGE_KEY, exception.getMessage());

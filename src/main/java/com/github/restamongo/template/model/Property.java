@@ -22,8 +22,14 @@ public class Property {
     /**
      * Properties to embed: if the list is not empty, this property must correspond to an existing template.
      */
-    @Field(targetType = FieldType.ARRAY)
+    @Field(targetType = FieldType.STRING)
     public List<String> embeddedProperties;
+
+    /**
+     * Empty constructor.
+     */
+    public Property() {
+    }
 
     /**
      * Default constructor with fields.

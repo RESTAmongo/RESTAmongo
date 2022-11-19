@@ -2,12 +2,11 @@ package com.github.restamongo;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class ApplicationTest {
     @Test
     void mainRun() {
-        Application.main(new String[] {});
-        assertTrue(true);
+        assertDoesNotThrow(() -> Application.main(new String[] {}));
     }
 }

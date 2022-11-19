@@ -25,10 +25,11 @@ public class TemplateController {
      *
      * @return list of templates
      */
+    @ResponseBody
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Template> getAll() {
-        return service.findAll();
+        return this.service.findAll();
     }
 
     /**
@@ -38,10 +39,11 @@ public class TemplateController {
      *
      * @return specified template
      */
+    @ResponseBody
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public Template getOne(@PathVariable String id) {
-        return service.findOne(id);
+        return this.service.findOne(id);
     }
 
     /**
@@ -51,10 +53,11 @@ public class TemplateController {
      *
      * @return newly created template
      */
+    @ResponseBody
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Template post(@RequestBody TemplateModel templateModel) {
-        return service.create(new Template(templateModel));
+        return this.service.create(new Template(templateModel));
     }
 
     /**
@@ -64,10 +67,11 @@ public class TemplateController {
      *
      * @return updated or created template
      */
+    @ResponseBody
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public Template put(@RequestBody TemplateModel templateModel) {
-        return service.update(new Template(templateModel));
+        return this.service.update(new Template(templateModel));
     }
 
     /**
@@ -75,9 +79,10 @@ public class TemplateController {
      *
      * @param id unique string id
      */
+    @ResponseBody
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String id) {
-        service.delete(id);
+        this.service.delete(id);
     }
 }

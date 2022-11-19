@@ -8,22 +8,24 @@ import com.github.restamongo.template.model.Template;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
 class TemplateServiceTest {
     Map<String, Template> repositoryTemplates;
-    @Mock
+    @MockBean
     TemplateRepository repository;
-    @InjectMocks
+    @Autowired
     TemplateService service;
 
     @BeforeEach
@@ -149,18 +151,19 @@ class TemplateServiceTest {
                 .when(repository).existsById(anyString());
         doAnswer((Answer<Template>) invocation -> {
             Template template = invocation.getArgument(0);
-            return repositoryTemplates.put(template.id, template);
+            repositoryTemplates.put(template.id, template);
+            return template;
         }).when(repository).save(any(Template.class));
         Template template = new Template("monster", Collections.singletonList(
                 new Property("archetype", 1, Collections.singletonList("color"))));
         assertAll(() -> assertEquals(2, service.findAll().size()),
-                  () -> assertDoesNotThrow(() -> service.create(template)),
+                  () -> assertEquals(template, service.create(template)),
                   () -> assertEquals(3, service.findAll().size()),
                   () -> assertEquals(template, service.findOne("monster")));
     }
 
     @Test
-    void updateExistingTemplate() {
+    void updateExisting() {
         doAnswer((Answer<List<Template>>) invocation ->
                 repositoryTemplates.values().stream().toList()).when(repository).findAll();
         doAnswer((Answer<Optional<Template>>) invocation ->
@@ -168,18 +171,19 @@ class TemplateServiceTest {
                 .when(repository).findById(anyString());
         doAnswer((Answer<Template>) invocation -> {
             Template template = invocation.getArgument(0);
-            return repositoryTemplates.put(template.id, template);
+            repositoryTemplates.put(template.id, template);
+            return template;
         }).when(repository).save(any(Template.class));
         Template template = new Template("cube", Collections.singletonList(
                 new Property("archetype", 1, Collections.emptyList())));
         assertAll(() -> assertEquals(2, service.findAll().size()),
-                  () -> assertDoesNotThrow(() -> service.update(template)),
+                  () -> assertEquals(template, service.update(template)),
                   () -> assertEquals(2, service.findAll().size()),
                   () -> assertEquals(template, service.findOne("cube")));
     }
 
     @Test
-    void updateCreateTemplate() {
+    void updateCreate() {
         doAnswer((Answer<List<Template>>) invocation ->
                 repositoryTemplates.values().stream().toList()).when(repository).findAll();
         doAnswer((Answer<Optional<Template>>) invocation ->
@@ -187,12 +191,13 @@ class TemplateServiceTest {
                 .when(repository).findById(anyString());
         doAnswer((Answer<Template>) invocation -> {
             Template template = invocation.getArgument(0);
-            return repositoryTemplates.put(template.id, template);
+            repositoryTemplates.put(template.id, template);
+            return template;
         }).when(repository).save(any(Template.class));
         Template template = new Template("monster", Collections.singletonList(
                 new Property("archetype", 1, Collections.singletonList("color"))));
         assertAll(() -> assertEquals(2, service.findAll().size()),
-                  () -> assertDoesNotThrow(() -> service.update(template)),
+                  () -> assertEquals(template, service.update(template)),
                   () -> assertEquals(3, service.findAll().size()),
                   () -> assertEquals(template, service.findOne("monster")));
     }

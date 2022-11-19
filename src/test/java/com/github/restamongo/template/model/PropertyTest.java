@@ -8,6 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PropertyTest {
     @Test
+    void constructorEmpty() {
+        Property property = new Property();
+        assertNotNull(property);
+    }
+
+    @Test
     void constructorFields() {
         Property property = new Property("color", 0, Collections.emptyList());
         assertAll(() -> assertEquals("color", property.name),

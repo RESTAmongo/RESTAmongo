@@ -27,7 +27,7 @@ public class TemplateService {
      * @return list of templates
      */
     public List<Template> findAll() {
-        return repository.findAll();
+        return this.repository.findAll();
     }
 
     /**
@@ -38,7 +38,7 @@ public class TemplateService {
      * @return specified template
      */
     public Template findOne(String id) {
-        return repository.findById(id).orElseThrow(() -> new DocumentNotFoundException(id));
+        return this.repository.findById(id).orElseThrow(() -> new DocumentNotFoundException(id));
     }
 
     /**
@@ -50,10 +50,10 @@ public class TemplateService {
      */
     public Template create(Template template) {
         this.validateTemplate(template);
-        if (repository.existsById(template.id))
+        if (this.repository.existsById(template.id))
             throw new DocumentAlreadyExistsException(template.id);
         else
-            return repository.save(template);
+            return this.repository.save(template);
     }
 
     /**
@@ -65,7 +65,7 @@ public class TemplateService {
      */
     public Template update(Template template) {
         this.validateTemplate(template);
-        return repository.save(template);
+        return this.repository.save(template);
     }
 
     /**
@@ -74,8 +74,8 @@ public class TemplateService {
      * @param id unique string id
      */
     public void delete(String id) {
-        if (repository.existsById(id))
-            repository.deleteById(id);
+        if (this.repository.existsById(id))
+            this.repository.deleteById(id);
         else
             throw new DocumentNotFoundException(id);
     }
@@ -98,7 +98,7 @@ public class TemplateService {
             if (property.name.isBlank())
                 throw new InvalidDocumentContentException("property must have a non-empty name");
             if (!property.embeddedProperties.isEmpty())
-                repository.findById(property.name).ifPresentOrElse(t -> {
+                this.repository.findById(property.name).ifPresentOrElse(t -> {
                     List<String> tPropertiesNames = t.properties.stream().map(p -> p.name).toList();
                     property.embeddedProperties.forEach(ep -> {
                         if (!tPropertiesNames.contains(ep))
