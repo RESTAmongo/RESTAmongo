@@ -12,7 +12,7 @@ plugins {
 }
 
 // Application info
-group = "com.github.restamongo"
+group = "com.github.massimopavoni.restamongo"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
