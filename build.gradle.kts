@@ -56,7 +56,7 @@ sonar {
     properties {
         property("sonar.host.url", project.property("sonar.host.url").toString())
         property("sonar.projectKey", project.property("sonar.projectKey").toString())
-        property("sonar.login", project.property("sonar.login").toString())
+        property("sonar.token", project.property("sonar.token").toString())
     }
 }
 
